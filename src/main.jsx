@@ -9,6 +9,10 @@ import DashBoard from "./pages/DashBoard.jsx";
 import AddPost from "./pages/AddPost.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import SignUpPage from "./pages/SignUpPage.jsx";
+import SignInPage from "./pages/SignInPage.jsx";
+import { AuthProvider } from "./contexts/authContext.jsx";
+import AddCategory from "./pages/AddCategory.jsx";
 const router = createBrowserRouter([
   {
     element: <LayoutMain></LayoutMain>,
@@ -26,14 +30,26 @@ const router = createBrowserRouter([
         path: "/admin/add-product",
         element: <AddPost></AddPost>,
       },
+      {
+        path: "/admin/add-category",
+        element: <AddCategory></AddCategory>,
+      },
     ],
+  },
+  {
+    path: "/sign-up",
+    element: <SignUpPage></SignUpPage>,
+  },
+  {
+    path: "/sign-in",
+    element: <SignInPage></SignInPage>,
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  <AuthProvider>
     <RouterProvider router={router}>
       <App />
       <ToastContainer></ToastContainer>
     </RouterProvider>
-  </React.StrictMode>
+  </AuthProvider>
 );

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -6,10 +6,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { db } from "../firebase/firebaseConfig";
 import { toast } from "react-toastify";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  query,
+  getDocs,
+  where,
+} from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../firebase/firebaseConfig";
 import slugify from "slugify";
+import { useAuth } from "../contexts/authContext";
 const schema = yup.object().shape({
   title: yup.string().required("Title is required"),
   // slug: yup.string().required("Slug is required"),
@@ -19,6 +27,45 @@ const AddPost = () => {
   const [content, setContent] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0);
   const [imagesUploaded, setImagesUploaded] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [userId, setUserId] = useState({
+    id: "",
+    email: "",
+  });
+  const { user } = useAuth();
+  useEffect(() => {
+    async function FetchUserData() {
+      const q = query(
+        collection(db, "users"),
+        where("email", "==", user.email)
+      );
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        setUserId({
+          id: doc.id,
+          email: doc.data().email,
+        });
+      });
+    }
+    FetchUserData();
+  }, [user.email]);
+  useEffect(() => {
+    async function getData() {
+      const q = query(collection(db, "categories"));
+      const querySnapshot = await getDocs(q);
+      const results = [];
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.id, " => ", doc.data());
+        results.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      setCategories(results);
+    }
+    getData();
+  }, []);
   const {
     register,
     handleSubmit,
@@ -32,6 +79,7 @@ const AddPost = () => {
     const { title, slug, image, featured, status, category } = data;
     const storageRef = ref(storage, `products/${image[0].name}`);
     const uploadTask = uploadBytesResumable(storageRef, image[0]);
+
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -60,7 +108,7 @@ const AddPost = () => {
       }
     );
     try {
-      const docRef = await addDoc(collection(db, "posts"), {
+      await addDoc(collection(db, "posts"), {
         title,
         slug: slugify(slug || title, { lower: true }),
         image: imagesUploaded,
@@ -68,6 +116,7 @@ const AddPost = () => {
         status,
         category,
         content,
+        userId: userId?.id,
         createdAt: serverTimestamp(),
       });
       toast.success("Add post successfully");
@@ -145,9 +194,11 @@ const AddPost = () => {
             {...register("category")}
             className="w-full border border-slate-200 rounded-lg py-3 px-5 outline-none  bg-transparent"
           >
-            <option value="1">Category 1</option>
-            <option value="2">Category 2</option>
-            <option value="3">Category 3</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.category}>
+                {category.category}
+              </option>
+            ))}
           </select>
           {errors.category && (
             <p className="text-red-500">{errors.category.message}</p>

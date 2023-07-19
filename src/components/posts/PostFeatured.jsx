@@ -1,10 +1,8 @@
 import { db } from "../../firebase/firebaseConfig";
 import {
   collection,
-  getDocs,
   where,
   limit,
-  orderBy,
   query,
   onSnapshot,
 } from "firebase/firestore";
@@ -30,6 +28,7 @@ const PostFeatured = () => {
   return (
     <div className="mb-5">
       <h3 className="text-3xl text-white font-semibold mb-5">Featured</h3>
+
       <div className="flex bg-white shadow-md overflow-hidden rounded-md  gap-x-5 mb-5 flex-col md:flex-row">
         <img
           className="h-[433px] w-full object-cover"

@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 const PostItem = ({ post }) => {
-  console.log(post);
   return (
     <div className="product-item bg-white rounded-md overflow-hidden">
       <a
@@ -12,7 +11,7 @@ const PostItem = ({ post }) => {
         <img
           src={post?.image}
           alt="product"
-          className="w-full  h-96 object-cover"
+          className="w-full  h-full object-cover"
         />
       </a>
       <div className="flex flex-col gap-2 mt-2 p-3">
@@ -24,6 +23,18 @@ const PostItem = ({ post }) => {
         >
           {post?.title}
         </a>
+        <div className="flex gap-x-2 items-center text-xs">
+          <a
+            href=""
+            className="font-medium  border border-gray-500 rounded-md px-2 py-1 "
+          >
+            HTML
+          </a>
+          <a href="" className="border border-gray-500 rounded-md px-2 py-1">
+            ViTran
+          </a>
+          <span>1 day ago by </span>
+        </div>
         <p className="line-clamp-3">{post?.content}</p>
       </div>
     </div>

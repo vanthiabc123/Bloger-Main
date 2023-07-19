@@ -17,8 +17,11 @@ const DashBoard = () => {
             </a>
           </li>
           <li className="py-2">
-            <a href="/admin/contact" className="text-gray-400 hover:text-white">
-              Contact
+            <a
+              href="/admin/add-category"
+              className="text-gray-400 hover:text-white"
+            >
+              Category
             </a>
           </li>
           <li className="py-2">
