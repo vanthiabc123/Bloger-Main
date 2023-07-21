@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
@@ -13,6 +12,9 @@ import SignUpPage from "./pages/SignUpPage.jsx";
 import SignInPage from "./pages/SignInPage.jsx";
 import { AuthProvider } from "./contexts/authContext.jsx";
 import AddCategory from "./pages/AddCategory.jsx";
+import DashBoardPosts from "./pages/DashBoardPosts.jsx";
+import DashBoardCategory from "./pages/DashBoardCategory.jsx";
+import EditPost from "./pages/EditPost.jsx";
 const router = createBrowserRouter([
   {
     element: <LayoutMain></LayoutMain>,
@@ -27,8 +29,20 @@ const router = createBrowserRouter([
     element: <DashBoard></DashBoard>,
     children: [
       {
-        path: "/admin/add-product",
+        path: "/admin/products/add",
         element: <AddPost></AddPost>,
+      },
+      {
+        path: "/admin/products",
+        element: <DashBoardPosts></DashBoardPosts>,
+      },
+      {
+        path: "/editPost/:id",
+        element: <EditPost />,
+      },
+      {
+        path: "/admin/category",
+        element: <DashBoardCategory></DashBoardCategory>,
       },
       {
         path: "/admin/add-category",

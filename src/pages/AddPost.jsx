@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { db } from "../firebase/firebaseConfig";
 import { toast } from "react-toastify";
+
 import {
   addDoc,
   collection,
@@ -14,20 +15,19 @@ import {
   getDocs,
   where,
 } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { storage } from "../firebase/firebaseConfig";
 import slugify from "slugify";
 import { useAuth } from "../contexts/authContext";
+import useFirebaseImage from "../hooks/useFirebaseImage";
 const schema = yup.object().shape({
   title: yup.string().required("Title is required"),
-  // slug: yup.string().required("Slug is required"),
 });
 
 const AddPost = () => {
   const [content, setContent] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [imagesUploaded, setImagesUploaded] = useState("");
+  // const [imagesUploaded, setImagesUploaded] = useState("");
   const [categories, setCategories] = useState([]);
+  // const [image, setImage] = useState([]);
   const [userId, setUserId] = useState({
     id: "",
     email: "",
@@ -69,49 +69,25 @@ const AddPost = () => {
   const {
     register,
     handleSubmit,
+    getValues,
+    setValue,
     formState: { errors, isValid },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const handleSubmitForm = async (data) => {
-    if (!isValid) return;
-    const { title, slug, image, featured, status, category } = data;
-    const storageRef = ref(storage, `products/${image[0].name}`);
-    const uploadTask = uploadBytesResumable(storageRef, image[0]);
+  const { handleDeleteImage, handleSelectImage, image, progress } =
+    useFirebaseImage(setValue, getValues);
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setUploadProgress(progress);
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-          default:
-            break;
-        }
-      },
-      (error) => {
-        console.log(error);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setImagesUploaded(downloadURL);
-          console.log(imagesUploaded);
-        });
-      }
-    );
+  const handleSubmitForm = async (data) => {
+    console.log(data);
+    if (!isValid) return;
+    const { title, slug, featured, status, category } = data;
     try {
       await addDoc(collection(db, "posts"), {
         title,
         slug: slugify(slug || title, { lower: true }),
-        image: imagesUploaded,
+        image: image,
         featured,
         status,
         category,
@@ -180,7 +156,12 @@ const AddPost = () => {
           <label className="block text-gray-700 text-sm font-bold mb-2">
             Images
           </label>
-          <input type="file" {...register("image")} />
+          <input
+            type="file"
+            name="image"
+            {...register("image")}
+            onChange={handleSelectImage}
+          />
           {uploadProgress > 0 && <progress value={uploadProgress} max="100" />}
           {errors.image && (
             <p className="text-red-500">{errors.image.message}</p>
@@ -235,10 +216,7 @@ const AddPost = () => {
           </div>
         </div>
         <div className="mb-4 col-span-2">
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
+          <button type="submit" className="btn-active btn btn-info ">
             Add Post
           </button>
         </div>

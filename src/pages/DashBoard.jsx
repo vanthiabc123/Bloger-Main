@@ -10,7 +10,7 @@ const DashBoard = () => {
         <ul className="mt-4">
           <li className="py-2">
             <a
-              href="/admin/add-product"
+              href="/admin/products"
               className="text-gray-400 hover:text-white"
             >
               Products
@@ -18,7 +18,7 @@ const DashBoard = () => {
           </li>
           <li className="py-2">
             <a
-              href="/admin/add-category"
+              href="/admin/category"
               className="text-gray-400 hover:text-white"
             >
               Category
