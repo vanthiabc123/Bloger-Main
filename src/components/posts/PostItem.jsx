@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 const PostItem = ({ post }) => {
   return (
-    <div className="product-item bg-white rounded-md overflow-hidden">
+    <div className="product-item bg-white rounded-md overflow-hidden relative">
       <a
         href="https://puce-determined-raven.cyclic.app/"
         target="_blank"
@@ -23,17 +23,19 @@ const PostItem = ({ post }) => {
         >
           {post?.title}
         </a>
-        <div className="flex gap-x-2 items-center text-xs">
+        <div className="flex gap-x-2 items-center text-xs absolute top-0 pt-2 text-white">
           <a
             href=""
-            className="font-medium  border border-gray-500 rounded-md px-2 py-1 "
+            className="font-medium  border border-white rounded-md px-2 py-1 "
           >
-            HTML
+            {post?.category}
           </a>
-          <a href="" className="border border-gray-500 rounded-md px-2 py-1">
-            ViTran
+          <a href="" className="border border-white rounded-md px-2 py-1">
+            {post?.author?.displayName}
           </a>
-          <span>1 day ago by </span>
+          <span className="border border-white rounded-md px-2 py-1">
+            {new Date(post?.createdAt?.seconds * 1000).toLocaleDateString()}
+          </span>
         </div>
         <p className="line-clamp-3">{post?.content}</p>
       </div>

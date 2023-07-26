@@ -5,7 +5,7 @@ import "react-quill/dist/quill.snow.css";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { db } from "../firebase/firebaseConfig";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 import {
   addDoc,
@@ -23,6 +23,12 @@ const schema = yup.object().shape({
 });
 
 const AddPost = () => {
+  const toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+  });
   const [content, setContent] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0);
   // const [imagesUploaded, setImagesUploaded] = useState("");
@@ -45,6 +51,7 @@ const AddPost = () => {
         setUserId({
           id: doc.id,
           email: doc.data().email,
+          displayName: doc.data().displayName,
         });
       });
     }
@@ -78,7 +85,6 @@ const AddPost = () => {
 
   const { handleDeleteImage, handleSelectImage, image, progress } =
     useFirebaseImage(setValue, getValues);
-
   const handleSubmitForm = async (data) => {
     console.log(data);
     if (!isValid) return;
@@ -93,11 +99,19 @@ const AddPost = () => {
         category,
         content,
         userId: userId?.id,
+        author: userId?.displayName,
         createdAt: serverTimestamp(),
       });
-      toast.success("Add post successfully");
+      toast.fire({
+        icon: "success",
+        title: "Add post successfully",
+      });
     } catch (error) {
       console.log(error);
+      toast.fire({
+        icon: "error",
+        title: "Add post failed",
+      });
     }
   };
   const modules = useMemo(

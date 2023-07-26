@@ -6,8 +6,6 @@ import LayoutMain from "./components/layout/LayoutMain.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import DashBoard from "./pages/DashBoard.jsx";
 import AddPost from "./pages/AddPost.jsx";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import SignInPage from "./pages/SignInPage.jsx";
 import { AuthProvider } from "./contexts/authContext.jsx";
@@ -15,6 +13,9 @@ import AddCategory from "./pages/AddCategory.jsx";
 import DashBoardPosts from "./pages/DashBoardPosts.jsx";
 import DashBoardCategory from "./pages/DashBoardCategory.jsx";
 import EditPost from "./pages/EditPost.jsx";
+import EditCategory from "./pages/EditCategory.jsx";
+import PostDetails from "./pages/PostDetails.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 const router = createBrowserRouter([
   {
     element: <LayoutMain></LayoutMain>,
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <HomePage></HomePage>,
+      },
+      {
+        path: "/post/:slug",
+        element: <PostDetails></PostDetails>,
       },
     ],
   },
@@ -48,6 +53,14 @@ const router = createBrowserRouter([
         path: "/admin/add-category",
         element: <AddCategory></AddCategory>,
       },
+      {
+        path: "/admin/edit-category/:id",
+        element: <EditCategory></EditCategory>,
+      },
+      {
+        path: "/profile/:id",
+        element: <ProfilePage></ProfilePage>,
+      },
     ],
   },
   {
@@ -63,7 +76,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <AuthProvider>
     <RouterProvider router={router}>
       <App />
-      <ToastContainer></ToastContainer>
     </RouterProvider>
   </AuthProvider>
 );

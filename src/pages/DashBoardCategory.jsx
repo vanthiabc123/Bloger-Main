@@ -1,7 +1,8 @@
 import { db } from "../firebase/firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 const DashBoardCategory = () => {
   const [categories, setCategories] = useState([]);
 
@@ -19,7 +20,33 @@ const DashBoardCategory = () => {
     getCategories();
   }, []);
 
-  console.log(categories);
+  const deleteCategory = (id) => async () => {
+    try {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You will not be able to recover this imaginary file!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, keep it",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await deleteDoc(doc(db, "categories", id));
+          Swal.fire(
+            "Deleted!",
+            "Your imaginary file has been deleted.",
+            "success"
+          );
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          Swal.fire("Cancelled", "Your imaginary file is safe :)", "error");
+        }
+      });
+
+      getCategories();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>
@@ -44,8 +71,18 @@ const DashBoardCategory = () => {
                 <td>{category.category}</td>
                 <td>{category.slug}</td>
                 <td className="flex gap-x-2">
-                  <button className="btn btn-info">Edit</button>
-                  <button className="btn btn-danger">Delete</button>
+                  <Link
+                    to={`/admin/edit-category/${category.id}`}
+                    className="btn btn-info"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={deleteCategory(category.id)}
+                    className="btn btn-danger"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

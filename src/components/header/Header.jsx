@@ -1,46 +1,59 @@
 import { useAuth } from "../../contexts/authContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebaseConfig";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const { user } = useAuth();
   console.log(user);
+  const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-between px-5 py-3 bg-transparent text-white ">
-      <img
-        className="w-[40px] h-[40px] object-cover"
-        src="https://source.unsplash.com/random"
-        alt=""
-      />
-      <ul className="flex gap-x-5">
-        <li>Home</li>
-        <li>About</li>
-        <li>Contact</li>
-      </ul>
-      <div>
-        {user ? (
-          <div className="flex gap-x-2 items-center">
-            <span className="text-white text-sm font-medium">
-              Welcome, {user.email}
-            </span>
-            <button
-              onClick={() => signOut(auth)}
-              className="bg-blue-500 text-white px-5 py-2 rounded-md"
-            >
-              Logout
-            </button>
-          </div>
-        ) : (
-          <Link
-            to={"/sign-in"}
-            className="bg-blue-500 text-white px-5 py-2 rounded-md"
-          >
-            Login
-          </Link>
-        )}
+    <div className="navbar bg-[#041c32]">
+      <div className="flex-1">
+        <a className="btn btn-ghost normal-case text-xl">Blogger</a>
       </div>
+      {user ? (
+        <div className="flex-none">
+          <div className="dropdown dropdown-end">
+            <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+              <div className="w-10 rounded-full">
+                <img src={user?.photoURL} />
+              </div>
+            </label>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li>
+                <Link to={"/profile/" + user?.uid} className="justify-between">
+                  Profile
+                  <span className="badge">New</span>
+                </Link>
+              </li>
+              <li>
+                <Link to={"/admin/products"}>Blog</Link>
+              </li>
+              <li>
+                <span
+                  onClick={() => {
+                    signOut(auth);
+                    navigate("/sign-in");
+                  }}
+                >
+                  Logout
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <Link to={"/sign-in"} className="btn btn-primary">
+            Sign In
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

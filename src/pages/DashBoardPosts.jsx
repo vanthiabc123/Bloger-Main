@@ -3,6 +3,7 @@ import { db } from "../firebase/firebaseConfig";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const DashBoardPosts = () => {
   const [posts, setPosts] = useState([]);
@@ -19,6 +20,33 @@ const DashBoardPosts = () => {
   useEffect(() => {
     getPosts();
   }, []);
+
+  const deletePost = (id) => async () => {
+    try {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You will not be able to recover this imaginary file!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, keep it",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await deleteDoc(doc(db, "posts", id));
+          Swal.fire(
+            "Deleted!",
+            "Your imaginary file has been deleted.",
+            "success"
+          );
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          Swal.fire("Cancelled", "Your imaginary file is safe :)", "error");
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    getPosts();
+  };
 
   return (
     <>
@@ -54,18 +82,14 @@ const DashBoardPosts = () => {
                 <td>{post.title}</td>
                 <td>{post.slug}</td>
                 <td>{post.category}</td>
-                <td> {post.status}</td>
+                <td>{post.status === "1" ? "Active" : "pending"}</td>
                 <td className="flex gap-x-2">
                   <Link to={`/editPost/${post.id}`} className="btn btn-info">
                     Edit
                   </Link>
                   <button
                     type="button"
-                    onClick={() => {
-                      deleteDoc(doc(db, "posts", post.id));
-                      toast.success("Delete post successfully");
-                      getPosts();
-                    }}
+                    onClick={deletePost(post.id)}
                     className="btn btn-danger"
                   >
                     Delete

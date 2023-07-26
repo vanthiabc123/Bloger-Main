@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { auth, db } from "../firebase/firebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
@@ -15,6 +15,7 @@ const schema = yup.object().shape({
   rpassword: yup
     .string()
     .oneOf([yup.ref("password"), null], "Password must match"),
+  username: yup.string().required("Username is required"),
 });
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -33,6 +34,8 @@ const SignUpPage = () => {
       await addDoc(collection(db, "users"), {
         email,
         createdAt: serverTimestamp(),
+        displayName: data.username,
+        uid: auth.currentUser.uid,
       });
       navigate("/");
     } catch (error) {
@@ -44,10 +47,30 @@ const SignUpPage = () => {
       <form
         onSubmit={handleSubmit(handleSignUp)}
         autoComplete="off"
-        className="w-full max-w-[600px] mx-auto mt-14 p-10 bg-white rounded-lg shadow"
+        className="w-full max-w-[600px] mx-auto mt-14 p-10 bg-white rounded-lg shadow text-black"
         aria-label="signup-form"
       >
         <h2 className="mb-10 text-3xl font-bold text-center">Sign Up Form</h2>
+        <div className="flex flex-col items-start mb-5 gap-y-3">
+          <label
+            htmlFor="username"
+            className="text-sm font-medium cursor-pointer"
+          >
+            Username
+          </label>
+          <input
+            id="username"
+            type="text"
+            {...register("username")}
+            className="w-full p-4 bg-transparent border border-gray-200 rounded-lg outline-none"
+            placeholder="Enter your email username..."
+          />
+          {errors.username && (
+            <span className="text-red-600 font-normal text-base">
+              {errors.username.message}
+            </span>
+          )}
+        </div>
         <div className="flex flex-col items-start mb-5 gap-y-3">
           <label htmlFor="email" className="text-sm font-medium cursor-pointer">
             Email
@@ -105,12 +128,6 @@ const SignUpPage = () => {
             </span>
           )}
         </div>
-        <button className="inline-flex items-center gap-2 justify-center px-8 py-4 font-sans font-semibold tracking-wide text-white bg-green-500 rounded-lg ">
-          <span>
-            <i className="fa-brands fa-google"></i>
-          </span>
-          <span>SignUp with Google</span>
-        </button>
 
         <div className="flex items-center justify-end mb-5 text-slate-400">
           <p>Already have an account?</p>

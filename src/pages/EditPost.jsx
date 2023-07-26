@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import useFirebaseImage from "../hooks/useFirebaseImage";
+import Swal from "sweetalert2";
 
 const schema = yup.object().shape({
   title: yup.string().required("Title is required"),
@@ -17,6 +18,12 @@ const schema = yup.object().shape({
   status: yup.string().required("Status is required"),
 });
 const EditPost = () => {
+  const toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+  });
   const {
     register,
     handleSubmit,
@@ -30,7 +37,6 @@ const EditPost = () => {
   const [post, setPost] = useState({});
   const [content, setContent] = useState("");
   const [categories, setCategories] = useState([]);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const postRef = collection(db, "posts");
   useEffect(() => {
     async function getData() {
@@ -97,9 +103,16 @@ const EditPost = () => {
         category: data.category,
         content: content,
       });
-      console.log("Document successfully updated!");
+      toast.fire({
+        icon: "success",
+        title: "Update post successfully",
+      });
     } catch (error) {
       console.log(error);
+      toast.fire({
+        icon: "error",
+        title: "Update post failed",
+      });
     }
   };
   return (
@@ -120,6 +133,9 @@ const EditPost = () => {
             defaultValue={post.title}
             className="border w-full border-slate-200 rounded-lg py-3 px-5 outline-none  bg-transparent"
           />
+          {errors.title && (
+            <p className="text-red-500">{errors.title.message}</p>
+          )}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -161,6 +177,9 @@ const EditPost = () => {
               </option>
             ))}
           </select>
+          {errors.category && (
+            <p className="text-red-500">{errors.category.message}</p>
+          )}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
