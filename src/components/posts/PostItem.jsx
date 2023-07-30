@@ -1,11 +1,11 @@
+import { Link } from "react-router-dom";
+
 /* eslint-disable react/prop-types */
 const PostItem = ({ post }) => {
   return (
     <div className="product-item bg-white rounded-md overflow-hidden relative">
-      <a
-        href="https://puce-determined-raven.cyclic.app/"
-        target="_blank"
-        rel="noreferrer"
+      <Link
+        to={`/post/${post?.slug}`}
         className="h-[133px] lg:h-[200px] border border-dark3  block overflow-hidden group relative"
       >
         <img
@@ -13,16 +13,11 @@ const PostItem = ({ post }) => {
           alt="product"
           className="w-full  h-full object-cover"
         />
-      </a>
+      </Link>
       <div className="flex flex-col gap-2 mt-2 p-3">
-        <a
-          href="#"
-          target="_blank"
-          rel="noreferrer"
-          className="text-xl font-semibold "
-        >
+        <Link to={`/post/${post?.slug}`} className="text-xl font-semibold ">
           {post?.title}
-        </a>
+        </Link>
         <div className="flex gap-x-2 items-center text-xs absolute top-0 pt-2 text-white">
           <a
             href=""

@@ -1,8 +1,16 @@
 import { db } from "../firebase/firebaseConfig";
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+  query,
+  where,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useAuth } from "../contexts/authContext";
 const DashBoardCategory = () => {
   const [categories, setCategories] = useState([]);
 
@@ -47,6 +55,26 @@ const DashBoardCategory = () => {
       console.log(error);
     }
   };
+  const { user } = useAuth();
+  const [userId, setUserId] = useState({ id: "", email: "", role: "" });
+  useEffect(() => {
+    async function FetchUserData() {
+      const q = query(collection(db, "users"), where("uid", "==", user.uid));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        setUserId({
+          id: doc.id,
+          email: doc.data().email,
+          role: doc.data().role,
+          displayName: doc.data().displayName,
+        });
+      });
+    }
+    FetchUserData();
+  }, [user.uid]);
+
+  if (userId.role !== "admin") return <h1>You are not admin</h1>;
 
   return (
     <div>

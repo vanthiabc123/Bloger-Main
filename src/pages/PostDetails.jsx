@@ -1,28 +1,35 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../firebase/firebaseConfig";
-import { doc, query, where, onSnapshot } from "firebase/firestore";
+import { doc, query, where, onSnapshot, collection } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import PostComment from "../components/comments/PostComment";
+import { useAuth } from "../contexts/authContext";
 
 const PostDetails = () => {
   const { slug } = useParams();
   const [post, setPost] = useState({});
+  const { user } = useAuth();
+  const renderHTML = (escapedHTML) =>
+    React.createElement("div", {
+      dangerouslySetInnerHTML: { __html: escapedHTML },
+    });
 
   useEffect(() => {
     const getData = async () => {
-      const colRef = query(db, "posts", where("slug", "==", slug));
-      onSnapshot(colRef, (snapshot) => {
-        const results = [];
-        snapshot.forEach((doc) => {
-          results.push({
+      const q = query(collection(db, "posts"), where("slug", "==", slug));
+      onSnapshot(q, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          console.log(doc.id, " => ", doc.data());
+          setPost({
             id: doc.id,
             ...doc.data(),
           });
         });
-        setPost(results[0]);
       });
     };
     getData();
+    console.log(post);
   }, [slug]);
 
   return (
@@ -42,35 +49,11 @@ const PostDetails = () => {
           </div>
         </div>
       </div>
-      <div className="mt-5 max-w-[960px] mx-auto">
-        <p>
-          {" "}
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Excepturi,
-          nemo at! Officia blanditiis delectus recusandae suscipit dolores
-          sapiente excepturi ad, eaque animi ab, soluta aliquam. Doloribus fugit
-          a et dolores aut quaerat itaque! Impedit totam assumenda, nesciunt
-          dolorum quas ullam a, dicta nisi quam consectetur sequi suscipit
-          debitis quibusdam cum at praesentium alias? Quos a totam earum
-          architecto unde ipsa animi expedita iure facere. Tenetur perspiciatis,
-          dolor quisquam possimus voluptate consequuntur expedita mollitia
-          inventore laboriosam deserunt ipsa soluta, veniam dolore non odio
-          quaerat error provident natus eaque illo nam adipisci. Mollitia,
-          temporibus. Enim facilis itaque ducimus quae maiores beatae laborum!
-        </p>
-        <p>
-          {" "}
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Excepturi,
-          nemo at! Officia blanditiis delectus recusandae suscipit dolores
-          sapiente excepturi ad, eaque animi ab, soluta aliquam. Doloribus fugit
-          a et dolores aut quaerat itaque! Impedit totam assumenda, nesciunt
-          dolorum quas ullam a, dicta nisi quam consectetur sequi suscipit
-          debitis quibusdam cum at praesentium alias? Quos a totam earum
-          architecto unde ipsa animi expedita iure facere. Tenetur perspiciatis,
-          dolor quisquam possimus voluptate consequuntur expedita mollitia
-          inventore laboriosam deserunt ipsa soluta, veniam dolore non odio
-          quaerat error provident natus eaque illo nam adipisci. Mollitia,
-          temporibus. Enim facilis itaque ducimus quae maiores beatae laborum!
-        </p>
+      <div className="mt-5 max-w-[960px] w-full mx-auto">
+        <div className="text-lg">{renderHTML(post?.content)}</div>
+      </div>
+      <div className="mt-5 max-w-[960px] w-full mx-auto">
+        <PostComment postId={post?.id} user={user}></PostComment>
       </div>
     </div>
   );

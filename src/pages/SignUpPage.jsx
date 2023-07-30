@@ -36,6 +36,10 @@ const SignUpPage = () => {
         createdAt: serverTimestamp(),
         displayName: data.username,
         uid: auth.currentUser.uid,
+        role: "user",
+      });
+      await updateProfile(auth.currentUser, {
+        displayName: data.username,
       });
       navigate("/");
     } catch (error) {
@@ -43,11 +47,11 @@ const SignUpPage = () => {
     }
   };
   return (
-    <>
+    <div className="h-screen pt-20">
       <form
         onSubmit={handleSubmit(handleSignUp)}
         autoComplete="off"
-        className="w-full max-w-[600px] mx-auto mt-14 p-10 bg-white rounded-lg shadow text-black"
+        className="w-full max-w-[600px] mx-auto  p-10 bg-white rounded-lg shadow text-black"
         aria-label="signup-form"
       >
         <h2 className="mb-10 text-3xl font-bold text-center">Sign Up Form</h2>
@@ -142,7 +146,7 @@ const SignUpPage = () => {
           Create an account
         </button>
       </form>
-    </>
+    </div>
   );
 };
 

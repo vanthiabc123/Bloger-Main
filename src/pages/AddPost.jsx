@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import ReactQuill from "react-quill";
+import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -13,11 +13,16 @@ import {
   serverTimestamp,
   query,
   getDocs,
+  getDoc,
   where,
 } from "firebase/firestore";
 import slugify from "slugify";
 import { useAuth } from "../contexts/authContext";
 import useFirebaseImage from "../hooks/useFirebaseImage";
+import { useNavigate } from "react-router-dom";
+import { imgbbAPI } from "../config/config";
+import ImageUploader from "quill-image-uploader";
+Quill.register("modules/imageUploader", ImageUploader);
 const schema = yup.object().shape({
   title: yup.string().required("Title is required"),
 });
@@ -37,26 +42,27 @@ const AddPost = () => {
   const [userId, setUserId] = useState({
     id: "",
     email: "",
+    role: "",
   });
   const { user } = useAuth();
+  const navigate = useNavigate();
   useEffect(() => {
     async function FetchUserData() {
-      const q = query(
-        collection(db, "users"),
-        where("email", "==", user.email)
-      );
+      const q = query(collection(db, "users"), where("uid", "==", user.uid));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         console.log(doc.id, " => ", doc.data());
         setUserId({
           id: doc.id,
           email: doc.data().email,
+          role: doc.data().role,
           displayName: doc.data().displayName,
         });
       });
     }
     FetchUserData();
-  }, [user.email]);
+  }, [user.uid]);
+
   useEffect(() => {
     async function getData() {
       const q = query(collection(db, "categories"));
@@ -130,9 +136,27 @@ const AddPost = () => {
         [{ header: [1, 2, 3, 4, 5, 6, false] }],
         ["link", "image", "video"],
       ],
+      imageUploader: {
+        // imgbbAPI
+        upload: async (file) => {
+          const bodyFormData = new FormData();
+          bodyFormData.append("image", file);
+          const response = await axios({
+            method: "post",
+            url: imgbbAPI,
+            data: bodyFormData,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+          return response.data.data.url;
+        },
+      },
     }),
     []
   );
+  if (userId.role !== "admin")
+    return <h1>You don't have permission to access this page</h1>;
   return (
     <div>
       <h3>Add Post</h3>

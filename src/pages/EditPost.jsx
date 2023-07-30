@@ -12,11 +12,7 @@ import * as yup from "yup";
 import useFirebaseImage from "../hooks/useFirebaseImage";
 import Swal from "sweetalert2";
 
-const schema = yup.object().shape({
-  title: yup.string().required("Title is required"),
-  category: yup.string().required("Category is required"),
-  status: yup.string().required("Status is required"),
-});
+const schema = yup.object().shape({});
 const EditPost = () => {
   const toast = Swal.mixin({
     toast: true,

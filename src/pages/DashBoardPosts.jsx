@@ -1,14 +1,41 @@
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { useAuth } from "../contexts/authContext";
 
 const DashBoardPosts = () => {
   const [posts, setPosts] = useState([]);
   const postRef = collection(db, "posts");
+  const { user } = useAuth();
+  const [userId, setUserId] = useState({ id: "", email: "", role: "" });
+  useEffect(() => {
+    async function FetchUserData() {
+      const q = query(collection(db, "users"), where("uid", "==", user.uid));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        setUserId({
+          id: doc.id,
+          email: doc.data().email,
+          role: doc.data().role,
+          displayName: doc.data().displayName,
+        });
+      });
+    }
+    FetchUserData();
+  }, [user.uid]);
 
+  const navigate = useNavigate();
   const getPosts = async () => {
     const querySnapshot = await getDocs(postRef);
     const data = querySnapshot.docs.map((doc) => ({
@@ -47,7 +74,7 @@ const DashBoardPosts = () => {
     }
     getPosts();
   };
-
+  if (userId.role !== "admin") return <h1>You are not admin</h1>;
   return (
     <>
       <div className="overflow-x-auto h-screen text-black">

@@ -20,7 +20,6 @@ import { useAuth } from "../contexts/authContext";
 
 const schema = yup.object().shape({
   displayName: yup.string().required("Displayname is required"),
-  email: yup.string().required("Email is required").email("Email is invalid"),
 });
 const ProfilePage = () => {
   const { user } = useAuth();
@@ -94,19 +93,6 @@ const ProfilePage = () => {
           />
           {errors.displayName && (
             <p className="text-red-500">{errors.displayName?.message}</p>
-          )}
-        </div>
-        <div className="flex flex-col w-full gap-y-3">
-          <label className="w-32 font-medium">Email</label>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            {...register("email")}
-            defaultValue={profile?.email}
-            className="w-full border border-slate-200 rounded-lg py-3 px-5 outline-none  bg-transparent"
-          />
-          {errors.email && (
-            <p className="text-red-500">{errors.email?.message}</p>
           )}
         </div>
         <div className="col-span-1 flex-col flex gap-y-2">
