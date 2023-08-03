@@ -5,7 +5,7 @@ import { auth, db } from "../firebase/firebaseConfig";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-
+import "./signup.css"
 const schema = yup.object().shape({
   email: yup.string().required("Email is required").email("Email is invalid"),
   password: yup
@@ -37,6 +37,7 @@ const SignUpPage = () => {
         displayName: data.username,
         uid: auth.currentUser.uid,
         role: "user",
+        // photoURL:
       });
       await updateProfile(auth.currentUser, {
         displayName: data.username,
@@ -135,7 +136,7 @@ const SignUpPage = () => {
 
         <div className="flex items-center justify-end mb-5 text-slate-400">
           <p>Already have an account?</p>
-          <a href="#" className="text-blue-500 underline">
+          <a href="/sign-in" className="text-blue-500 underline">
             Sign In
           </a>
         </div>

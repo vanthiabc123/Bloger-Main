@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    background-color: #041c32;
+    background-color: white;
   }
   h1 {
     @apply text-2xl;

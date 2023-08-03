@@ -1,0 +1,70 @@
+/* CSS cho phần chung của form */
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* CSS cho tiêu đề */
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* CSS cho các trường đầu vào */
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  input:focus {
+    border-color: #3490dc;
+  }
+  
+  /* CSS cho thông báo lỗi */
+  .text-red-600 {
+    color: #e53e3e;
+    font-size: 14px;
+  }
+  
+  /* CSS cho liên kết đăng nhập */
+  .text-slate-400 {
+    color: #718096;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .text-blue-500 {
+    color: #3b82f6;
+    text-decoration: underline;
+    margin-left: 5px;
+  }
+  
+  /* CSS cho nút Đăng ký */
+  button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    background-color: #3b82f6;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #2563eb;
+  }
+  

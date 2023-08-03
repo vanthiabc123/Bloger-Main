@@ -37,7 +37,7 @@ const PostFeatured = () => {
 
   return (
     <div className="mb-5">
-      <h3 className="text-3xl text-white font-semibold mb-5">Featured</h3>
+      <h3 className="text-3xl text-black font-semibold mb-5">Featured</h3>
       <PostFeaturedLagre post={first}></PostFeaturedLagre>
       <div className="grid lg:grid-cols-4 lg:gap-5 max-lg:grid-flow-col max-lg:auto-cols-[215px] gap-5 max-lg:overflow-x-auto scroll-hidden ">
         {posts.length > 0 &&

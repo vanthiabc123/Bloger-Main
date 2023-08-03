@@ -27,23 +27,25 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="navbar bg-[#041c32]">
+    <div className="navbar bg-[#010406]">
       <div className="flex-1">
-        <a href="/" className="btn btn-ghost normal-case text-xl">
+        <a href="/" className="btn btn-ghost normal-case text-white text-xl">
           Blogger
         </a>
       </div>
       <ul className="menu menu-horizontal px-1">
         <li>
-          <Link to={"/"}>Trang Chủ</Link>
+          <Link to={"/"} className="text-white">
+            Trang Chủ
+          </Link>
         </li>
         <li>
           <details>
-            <summary>Category</summary>
+            <summary className="text-white">Category</summary>
             <ul className="p-2 bg-base-100 z-10">
               {categories.map((category) => (
                 <li key={category.id}>
-                  <Link to={"/category/" + category.slug}>
+                  <Link to={"/category/" + category.slug} className="text-black">
                     {category.category}
                   </Link>
                 </li>
@@ -65,13 +67,18 @@ const Header = () => {
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li>
-                <Link to={"/profile/" + user?.uid} className="justify-between">
+                <Link
+                  to={"/profile/" + user?.uid}
+                  className="justify-between text-black"
+                >
                   Profile
                   <span className="badge">New</span>
                 </Link>
               </li>
               <li>
-                <Link to={"/admin/products"}>Blog</Link>
+                <Link to={"/admin/products"} className="text-black">
+                  Blog
+                </Link>
               </li>
               <li>
                 <span
@@ -79,6 +86,7 @@ const Header = () => {
                     signOut(auth);
                     navigate("/sign-in");
                   }}
+                  className="text-black"
                 >
                   Logout
                 </span>

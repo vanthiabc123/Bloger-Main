@@ -34,7 +34,7 @@ const PostFeaturedLagre = (props) => {
               props?.post?.createdAt?.seconds * 1000
             ).toLocaleDateString()}
           </span>
-          <span className="px-2 py-1 rounded-md border boder-white  left-0">
+          <span className="px-2 py-1 rounded-md border boder-black  left-0">
             {props?.post?.author}
           </span>
         </div>

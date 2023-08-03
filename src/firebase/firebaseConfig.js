@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-const firebaseConfig = {
-  apiKey: "AIzaSyAtFN5Pl44DU1RZNDhRCoFrIZH94S4kCGk",
-  authDomain: "fir-639c9.firebaseapp.com",
-  projectId: "fir-639c9",
-  storageBucket: "fir-639c9.appspot.com",
-  messagingSenderId: "869329268748",
-  appId: "1:869329268748:web:419622c9a590af00397e29",
+const firebaseConfig = { 
+  apiKey : "AIzaSyCYEHriwNOiv9O_sbh1CCdlb0cQd3MaHLo" , 
+  authDomain : "blog-7d7e9.firebaseapp.com" , 
+  projectId : "blog-7d7e9" , 
+  storageBucket : "blog-7d7e9.appspot.com" , 
+  messagingSenderId : "397849763821" , 
+  appId : "1:397849763821:web:b3d4786fe2d45e745ed1e4" 
 };
 
 // Initialize Firebase

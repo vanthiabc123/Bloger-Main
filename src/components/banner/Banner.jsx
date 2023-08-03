@@ -8,10 +8,11 @@ const Banner = () => {
         alt=""
         className="w-full h-full object-cover banner-img"
       />
-      <div className="absolute top-0 left-0 w-full h-full text-[#ECB365] font-medium bg-opacity-50 flex items-center p-5 text-6xl max-w-[500px]">
+      <div  className="absolute top-0 left-0 w-full h-full text-[black] font-medium bg-opacity-50 flex items-center p-5 text-6xl max-w-[500px]">
         <h1>
           <Typewriter
-            words={["Welcome to my website", "I am a web developer"]}
+        
+            words={["Welcome to my website", "I am a Web Developer"]}
             loop={0}
             cursor
             cursorStyle="_"

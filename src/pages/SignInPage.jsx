@@ -6,22 +6,10 @@ import { googleProvider } from "../firebase/firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import Swal from "sweetalert2";
-
+import "./signin.css"
 const schema = yup.object().shape({
   email: yup.string().required("Email is required").email("Email is invalid"),
   password: yup.string().required("Password is required"),
-});
-
-const toast = Swal.mixin({
-  toast: true,
-  position: "top-end",
-  showConfirmButton: false,
-  timer: 3000,
-  timerProgressBar: true,
-  didOpen: (toast) => {
-    toast.addEventListener("mouseenter", Swal.stopTimer);
-    toast.addEventListener("mouseleave", Swal.resumeTimer);
-  },
 });
 
 const SignInPage = () => {
@@ -33,7 +21,19 @@ const SignInPage = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  //   const { user } = useAuth();
+
+  const toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
+
   const handleSignIn = async (data) => {
     if (!isValid) return;
     const { email, password } = data;
@@ -48,6 +48,7 @@ const SignInPage = () => {
       console.log(error);
     }
   };
+
   const handleSignInWithGoogle = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
@@ -56,6 +57,7 @@ const SignInPage = () => {
       console.log(error);
     }
   };
+
   return (
     <div>
       <form
@@ -73,11 +75,11 @@ const SignInPage = () => {
             id="email"
             type="email"
             {...register("email")}
-            className="w-full p-4 bg-transparent border border-gray-200 rounded-lg outline-none"
+            className="input-field"
             placeholder="Enter your email address..."
           />
           {errors.email && (
-            <span className="text-red-600 font-normal text-base">
+            <span className="error-message">
               {errors.email.message}
             </span>
           )}
@@ -93,11 +95,11 @@ const SignInPage = () => {
             id="password"
             type="password"
             {...register("password")}
-            className="w-full p-4 bg-transparent border border-gray-200 rounded-lg outline-none"
+            className="input-field"
             placeholder="Enter your password"
           />
           {errors.password && (
-            <span className="text-red-600 font-normal text-base">
+            <span className="error-message">
               {errors.password.message}
             </span>
           )}
@@ -105,23 +107,24 @@ const SignInPage = () => {
 
         <div className="flex items-center justify-end mb-5 text-slate-400">
           <p>Already have an account?</p>
-          <a href="#" className="text-blue-500 underline">
+          <a href="/sign-up" className="text-blue-500 underline">
             Sign Up
           </a>
         </div>
         <button
           type="submit"
-          className="inline-flex w-full items-center justify-center px-8 py-4 font-sans font-semibold tracking-wide text-white bg-blue-500 rounded-lg h-[60px]"
+          className="submit-button"
         >
           Sign In
         </button>
         <div
           onClick={handleSignInWithGoogle}
-          className="inline-flex items-center gap-2 justify-center px-5 mt-2 cursor-pointer py-3 font-sans font-semibold tracking-wide text-white bg-green-500 rounded-lg w-[100px]"
+          className="google-button"
         >
           <span>
             <i className="fa-brands fa-google"></i>
           </span>
+          Sign in with Google
         </div>
       </form>
     </div>
