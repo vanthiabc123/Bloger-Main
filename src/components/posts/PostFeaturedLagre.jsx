@@ -1,7 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import * as sanitizeHtml from "sanitize-html";
 const PostFeaturedLagre = (props) => {
+  const cleanHtml = sanitizeHtml(props?.post?.content, {
+    allowedTags: [],
+  });
+
   return (
     <div className="flex relative bg-white shadow-md overflow-hidden rounded-md  gap-x-5 mb-5 flex-col md:flex-row">
       <img
@@ -16,17 +20,15 @@ const PostFeaturedLagre = (props) => {
         >
           {props?.post.title}
         </Link>
-        <p className="text-black">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas, ipsam!
-          Odio, aliquid expedita? Amet beatae, dolorem iure dolorum excepturi
-          obcaecati quidem, laborum aperiam dolor quia accusamus reiciendis
-          veritatis saepe suscipit?
-        </p>
+        <p className="text-black line-clamp-4">{cleanHtml}</p>
         {/* category */}
         <div className="flex gap-x-2 mt-2 absolute left-0 top-0 text-white p-2">
-          <span className="px-2 py-1 rounded-md border boder-white  left-0">
+          <a
+            href={`/category/${props?.post?.category}`}
+            className="px-2 py-1 rounded-md border boder-white  left-0"
+          >
             {props?.post?.category}
-          </span>
+          </a>
           <span className="px-2 py-1 rounded-md border boder-white  left-0">
             {new Date(
               props?.post?.createdAt?.seconds * 1000

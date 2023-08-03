@@ -16,6 +16,7 @@ import EditPost from "./pages/EditPost.jsx";
 import EditCategory from "./pages/EditCategory.jsx";
 import PostDetails from "./pages/PostDetails.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
+import CategoryPage from "./pages/CategoryPage.jsx";
 const router = createBrowserRouter([
   {
     element: <LayoutMain></LayoutMain>,
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "/post/:slug",
         element: <PostDetails></PostDetails>,
+      },
+      {
+        path: "/category/:slug",
+        element: <CategoryPage></CategoryPage>,
       },
     ],
   },

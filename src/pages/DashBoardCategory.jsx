@@ -56,25 +56,7 @@ const DashBoardCategory = () => {
     }
   };
   const { user } = useAuth();
-  const [userId, setUserId] = useState({ id: "", email: "", role: "" });
-  useEffect(() => {
-    async function FetchUserData() {
-      const q = query(collection(db, "users"), where("uid", "==", user.uid));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-        setUserId({
-          id: doc.id,
-          email: doc.data().email,
-          role: doc.data().role,
-          displayName: doc.data().displayName,
-        });
-      });
-    }
-    FetchUserData();
-  }, [user.uid]);
-
-  if (userId.role !== "admin") return <h1>You are not admin</h1>;
+  if (user.role !== "admin") return <h1>You are not admin</h1>;
 
   return (
     <div>

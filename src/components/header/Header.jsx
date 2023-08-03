@@ -2,11 +2,29 @@ import { useAuth } from "../../contexts/authContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebaseConfig";
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { db } from "../../firebase/firebaseConfig";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 
 const Header = () => {
   const { user } = useAuth();
   console.log(user);
   const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const colRef = collection(db, "categories");
+    onSnapshot(colRef, (snapshot) => {
+      const results = [];
+      snapshot.forEach((doc) => {
+        results.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      setCategories(results);
+    });
+  }, []);
 
   return (
     <div className="navbar bg-[#041c32]">
@@ -17,18 +35,19 @@ const Header = () => {
       </div>
       <ul className="menu menu-horizontal px-1">
         <li>
-          <a href="/">Trang Chủ</a>
+          <Link to={"/"}>Trang Chủ</Link>
         </li>
         <li>
           <details>
-            <summary>Parent</summary>
-            <ul className="p-2 bg-base-100">
-              <li>
-                <a>Link 1</a>
-              </li>
-              <li>
-                <a>Link 2</a>
-              </li>
+            <summary>Category</summary>
+            <ul className="p-2 bg-base-100 z-10">
+              {categories.map((category) => (
+                <li key={category.id}>
+                  <Link to={"/category/" + category.slug}>
+                    {category.category}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </details>
         </li>

@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../firebase/firebaseConfig";
-import { doc, query, where, onSnapshot, collection } from "firebase/firestore";
+import { query, where, onSnapshot, collection } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import PostComment from "../components/comments/PostComment";
 import { useAuth } from "../contexts/authContext";
@@ -34,7 +34,7 @@ const PostDetails = () => {
 
   return (
     <div className="page-container">
-      <div className="flex items-center gap-x-5 h-screen">
+      <div className="flex  gap-x-5 h-full flex-col md:flex-row md:h-screen md:items-center">
         <img
           src={post?.image}
           alt=""
@@ -44,8 +44,10 @@ const PostDetails = () => {
           <h3 className="text-2xl font-semibold">{post?.title}</h3>
           <div className="flex gap-x-2">
             <span>Category : {post?.category}</span>
-            <span>1/2/2020</span>
-            <span>Author</span>
+            <span>
+              {new Date(post?.createdAt?.seconds * 1000).toLocaleDateString()}
+            </span>
+            <span>{post?.author}</span>
           </div>
         </div>
       </div>

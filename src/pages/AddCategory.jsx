@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import slugify from "slugify";
 import * as yup from "yup";
+import { useAuth } from "../contexts/authContext";
 
 const schema = yup.object().shape({
   category: yup.string().required("Category is required"),
@@ -31,6 +32,8 @@ const AddCategory = () => {
       console.log(error);
     }
   };
+  const { user } = useAuth();
+  if (user.role !== "admin") return <h1>You are not admin</h1>;
   return (
     <div className="h-screen w-full">
       <h1>Add Category</h1>

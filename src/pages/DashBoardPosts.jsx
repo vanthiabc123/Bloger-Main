@@ -9,7 +9,6 @@ import {
 import { db } from "../firebase/firebaseConfig";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { useAuth } from "../contexts/authContext";
 

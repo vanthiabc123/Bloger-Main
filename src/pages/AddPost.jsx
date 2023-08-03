@@ -162,7 +162,7 @@ const AddPost = () => {
       <h3>Add Post</h3>
       <form
         onSubmit={handleSubmit(handleSubmitForm)}
-        className="grid grid-cols-2 gap-5"
+        className="grid grid-cols-2 gap-5 text-black"
       >
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -197,6 +197,7 @@ const AddPost = () => {
           <input
             type="file"
             name="image"
+            className="file-input file-input-bordered file-input-info w-full max-w-xs bg-transparent"
             {...register("image")}
             onChange={handleSelectImage}
           />
@@ -227,7 +228,11 @@ const AddPost = () => {
           <label className="block text-gray-700 text-sm font-bold mb-2">
             Featured
           </label>
-          <input type="checkbox" {...register("featured")} />
+          <input
+            type="checkbox"
+            className="checkbox checkbox-accent"
+            {...register("featured")}
+          />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -235,10 +240,10 @@ const AddPost = () => {
           </label>
           <select
             {...register("status")}
-            className="w-full border border-slate-200 rounded-lg py-3 px-5 outline-none  bg-transparent"
+            className="select select-info w-full max-w-xs bg-transparent text-black"
           >
             <option value="1">Active</option>
-            <option value="2">Inactive</option>
+            <option value="2">Pending</option>
           </select>
         </div>
         <div className="mb-4 col-span-2">
